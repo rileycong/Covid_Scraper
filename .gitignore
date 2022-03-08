@@ -1,0 +1,3 @@
+# Ignore all the stuff in the venv folder web_scraping
+venv/
+__pycache__/

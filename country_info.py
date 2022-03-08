@@ -7,7 +7,6 @@ import pandas as pd
 source = requests.get('https://www.worldometers.info/coronavirus/').text
 soup = BeautifulSoup(source, 'lxml')
 
-## The Scrape Begins ##
 
 # Pick the table we want to scrape using id
 covid_table = soup.find("table", attrs={"id": "main_table_countries_today"})
@@ -41,34 +40,10 @@ data = df[df['#']!=''].reset_index(drop=True)
 # Data points with # value are the countries of the world while the data points with
 # null values for # columns are features like continents totals etc
 
+# Drop duplicates to only get today's data
 data = data.drop_duplicates(subset = ["Country,Other"])
-# Reason to drop duplicates : Worldometer reports data for 3 days: today and 2 days back
-# Removing duplicates removes the values for the past two days and keep today's
 
-# Drop the following columns
-cols = ['#',
-            'Tot\xa0Cases/1M pop',
-            'Deaths/1M pop',
-            'TotalTests',
-            'Tests/1M pop',
-            '1 Caseevery X ppl',
-            '1 Deathevery X ppl',
-            '1 Testevery X ppl',
-            'New Cases/1M pop',
-            'New Deaths/1M pop',
-            'Active Cases/1M pop']
-
-# Data full has all needed informations
-data_full = data.drop(cols, axis=1)
-
-# Select specific columns from data_full
-def Select():
-    cases = data_full[['TotalCases','ActiveCases','NewCases','Serious,Critical']]
-
-    deaths = data_full[['TotalDeaths','NewDeaths']]
-
-    recovered = data_full[['TotalRecovered','NewRecovered']]
-
-    population = data_full['Population']
-
-    return cases, deaths, recovered, population
+# Select the country-related columns
+def Country():
+    country_info = data[['Country,Other','Continent']]
+    return country_info
