@@ -1,8 +1,8 @@
 name: Covid Scraping 
 on: schedule:
-        - cron: "0 0 * * *" #runs at 00:00 UTC everyday
+        - cron: "0 12 * * *" #runs at 00:00 UTC everyday
 jobs:
-  Explore-GitHub-Actions:
+    covid-scraping:
     runs-on: ubuntu-latest
     steps:
       - name: checkout repo content
