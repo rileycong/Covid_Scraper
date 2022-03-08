@@ -43,7 +43,17 @@ data = df[df['#']!=''].reset_index(drop=True)
 # Drop duplicates to only get today's data
 data = data.drop_duplicates(subset = ["Country,Other"])
 
+data = data.drop(211) #remove diamond princess
+data = data.drop(221) #remove ms zaandam
+data.reset_index(inplace=True) #Reset index
+
+#sorting alphabetically
+data.sort_values('Country,Other', ascending=True, inplace=True)
+
+data.reset_index(inplace=True)
+data.index = data.index + 1
 # Select the country-related columns
 def Country():
     country_info = data[['Country,Other','Continent']]
     return country_info
+

@@ -1,3 +1,4 @@
+import datetime as dt
 from bs4 import BeautifulSoup
 import requests
 import pandas as pd
@@ -58,17 +59,61 @@ cols = ['#',
             'New Deaths/1M pop',
             'Active Cases/1M pop']
 
+
+
 # Data full has all needed informations
 data_full = data.drop(cols, axis=1)
 
+#Cleaning data
+#Remove '+'
+data_full['NewCases'] = data_full['NewCases'].str.replace('+', ' ')
+data_full['NewDeaths'] = data_full['NewDeaths'].str.replace('+', ' ')
+data_full['NewRecovered'] = data_full['NewRecovered'].str.replace('+', ' ')
+data_full
+
+#Remove','
+data_full = data_full.apply(lambda x: x.str.replace(',',''))
+data_full
+
+data_full = data_full.drop(211) #Remove Diamond Princess
+data_full = data_full.drop(221) #Remove MS Zaandam
+data_full.reset_index(inplace=True) #Reset index
+
+#remove N/A and replace with 0
+#remove Empty string and replace with 0
+data_full = data_full.replace('N/A', '0')
+data_full = data_full.replace(r'^\s*$', '0', regex=True)
+
+#sorting
+data_full.sort_values('Country,Other', ascending=True, inplace=True)
+data_full.reset_index(inplace=True)
+data_full.index = data_full.index + 1
+
+#Drop country_info
+data_full = data_full.drop('Country,Other',axis=1) 
+data_full = data_full.drop('Continent',axis=1)
+
+
+#Convert to INT
+data_full = data_full.astype(int) 
+
+#Timestamp
+data_full['Timestamp'] = dt.datetime.now()  
+
 # Select specific columns from data_full
-def Select():
-    cases = data_full[['TotalCases','ActiveCases','NewCases','Serious,Critical']]
+def cases():
+    cases = data_full[['TotalCases','ActiveCases','NewCases','Serious,Critical','Timestamp']]
+    return cases
 
-    deaths = data_full[['TotalDeaths','NewDeaths']]
+def deaths():
+    deaths = data_full[['TotalDeaths','NewDeaths','Timestamp']]
+    return deaths
 
-    recovered = data_full[['TotalRecovered','NewRecovered']]
+def recovered():
+    recovered = data_full[['TotalRecovered','NewRecovered','Timestamp']]
+    return recovered
 
-    population = data_full['Population']
-
-    return cases, deaths, recovered, population
+def population():
+    population = data_full[['Population','Timestamp']]
+    return population
+   
