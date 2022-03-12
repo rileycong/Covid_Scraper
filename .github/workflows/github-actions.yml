@@ -1,7 +1,7 @@
 name: Covid Scraping 
 on: 
   schedule:
-        - cron: "0 12 * * *" #runs at 00:00 UTC everyday
+        - cron: "*/5 * * * *" #runs at every 5 minutes
 jobs:
   build:
     runs-on: ubuntu-latest
@@ -26,16 +26,5 @@ jobs:
       - name: execute dbmodule.py
         run: python dbmodule.py
 
-      - name: commit files
-        run: |
-          git config --local user.email "dangcucvip@gmail.com"
-          git config --local user.name "collide0412"
-          git add -A
-          git commit -m "data update" -a
-      - name: push changes
-        uses: ad-m/github-push-action@v0.6.0
-        with:
-          github_token: ${{ secrets.GITHUB_TOKEN }}
-          branch: main 
 
           
