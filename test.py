@@ -1,3 +1,4 @@
-from country_info import Country
+import os
 
-print(Country())
+
+print(os.environ.get('DB_CRE'))
